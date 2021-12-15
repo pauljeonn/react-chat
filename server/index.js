@@ -25,6 +25,11 @@ io.on('connection', (socket) => {
 		console.log(`User with ID: ${socket.id} joined room: ${id}`);
 	});
 
+	// sendMessage 이벤트
+	socket.on('sendMessage', (data) => {
+		console.log(data);
+	});
+
 	// disconnect 이벤트 핸들링
 	socket.on('disconnect', () => {
 		console.log('User Disconnected: ', socket.id);
