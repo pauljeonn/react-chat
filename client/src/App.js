@@ -34,18 +34,21 @@ const MainWrapper = styled.div`
 
 const Input = styled.input`
 	width: 200px;
-	height: 25px;
-	margin-bottom: 5px;
+	height: 50px;
+	margin-bottom: 10px;
+	border: 3px solid #a046f0;
+	border-radius: 5px;
 	box-sizing: border-box;
 `;
 
 const Button = styled.button`
 	width: 200px;
-	height: 35px;
+	height: 50px;
 	background-color: #a046f0;
-	color: #fff566;
-	font-size: 18px;
+	color: white;
+	font-size: 20px;
 	border: none;
+	border-radius: 5px;
 `;
 
 const ChatScreen = styled.div`
@@ -55,8 +58,8 @@ const ChatScreen = styled.div`
 `;
 
 const Back = styled.button`
-	margin-top: 100px;
-	width: 150px;
+	margin-top: 200px;
+	width: 250px;
 	height: 50px;
 	background-color: #fff566;
 	border: 3px solid #a046f0;
@@ -93,7 +96,7 @@ function App() {
 					<ChatScreen>
 						<Chat socket={socket} username={username} room={room} />
 						<Back onClick={back}>
-							<p>BACK</p>
+							<p>메인화면으로 돌아가기</p>
 						</Back>
 					</ChatScreen>
 				) : (

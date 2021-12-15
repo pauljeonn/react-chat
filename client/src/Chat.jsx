@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import styled from 'styled-components';
 import { RiSendPlane2Fill } from 'react-icons/ri';
 
@@ -25,6 +25,8 @@ const Body = styled.div`
 	height: 600px;
 	border: 10px solid #a046f0;
 	box-sizing: border-box;
+	overflow: auto;
+	flex-grow: 1;
 	/* background-color: #fff566; ; */
 `;
 
@@ -58,22 +60,37 @@ const Button = styled.button`
 `;
 
 const Message = styled.div`
-	max-width: 200px;
 	margin-top: 10px;
-	padding: 10px;
+	width: 100%;
+	display: flex;
+	justify-content: ${(props) =>
+		props.author === props.user ? 'flex-end' : 'flex-start'};
+`;
+
+const MessageBox = styled.div`
+	width: auto;
+	max-width: 120px;
+	display: flex;
+	word-wrap: break-word;
+	border-radius: 5px;
 	background-color: ${(props) =>
 		props.author === props.user ? '#a046f0' : '#d7f9ff'};
 	color: ${(props) => (props.author === props.user ? 'white' : 'black')};
+	padding: 15px;
 `;
 
 const MessageUser = styled.div``;
 
 const MessageContent = styled.div``;
 
+const MessageTime = styled.div``;
+
 // socket, username, room 값을 인자로 받는다
 const Chat = ({ socket, username, room }) => {
 	const [currentMessage, setCurrentMessage] = useState('');
 	const [messageList, setMessageList] = useState([]);
+	// auto scroll to bottom 위해서 useRef 사용
+	const messageEnd = useRef(null);
 
 	const sendMessage = async () => {
 		if (currentMessage) {
@@ -85,12 +102,16 @@ const Chat = ({ socket, username, room }) => {
 				time:
 					new Date(Date.now()).getHours() +
 					':' +
+					(new Date(Date.now()).getMinutes() < 10 ? '0' : '') +
 					new Date(Date.now()).getMinutes(),
 			};
 
 			// 메시지 emit
 			await socket.emit('sendMessage', messageData);
 			setMessageList((messageList) => [...messageList, messageData]);
+
+			// input text clear해주기
+			setCurrentMessage('');
 		}
 	};
 
@@ -101,6 +122,11 @@ const Chat = ({ socket, username, room }) => {
 		});
 	}, [socket]); // socket에 변화가 있을때만 작동
 
+	// messageList의 변화가 있을때, 즉 새로운 메시지가 생기면 자동으로 scroll to bottom
+	useEffect(() => {
+		messageEnd.current.scrollIntoView({ behavior: 'smooth' });
+	}, [messageList]);
+
 	return (
 		<Container>
 			<Header>
@@ -110,17 +136,27 @@ const Chat = ({ socket, username, room }) => {
 				{messageList.map((messageData) => {
 					return (
 						<Message author={messageData.author} user={username}>
-							<MessageUser>{messageData.username}</MessageUser>
-							{messageData.message}
+							<MessageBox author={messageData.author} user={username}>
+								<MessageUser>{messageData.username}</MessageUser>
+								<MessageContent>{messageData.message}</MessageContent>
+							</MessageBox>
+							<MessageTime>{messageData.time}</MessageTime>
 						</Message>
 					);
 				})}
+				{/* 마지막 채팅 위치 */}
+				<div ref={messageEnd}></div>
 			</Body>
 			<Footer>
 				<Input
 					type="text"
 					placeholder="메시지를 입력해주세요"
 					onChange={(e) => setCurrentMessage(e.target.value)}
+					// 엔터키 입력해도 sendMessage
+					onKeyPress={(e) => {
+						e.key === 'Enter' && sendMessage();
+					}}
+					value={currentMessage}
 				/>
 				<Button onClick={sendMessage}>
 					<RiSendPlane2Fill style={{ fontSize: '24px', color: '#a046f0' }} />
