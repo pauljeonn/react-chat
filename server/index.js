@@ -27,7 +27,8 @@ io.on('connection', (socket) => {
 
 	// sendMessage 이벤트
 	socket.on('sendMessage', (data) => {
-		console.log(data);
+		// room에게 data 보내기
+		socket.to(data.room).emit('receiveMessage', data);
 	});
 
 	// disconnect 이벤트 핸들링
