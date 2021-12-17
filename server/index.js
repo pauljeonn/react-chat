@@ -11,7 +11,8 @@ const server = http.createServer(app); // express 서버 생성
 // pass server & object for cors (cors 이슈 해결)
 const io = new Server(server, {
 	cors: {
-		origin: 'http://localhost:3000',
+		// origin: 'http://localhost:3000',
+		origin: 'https://pauljeonn-chatty.netlify.app/',
 	},
 });
 
@@ -38,6 +39,6 @@ io.on('connection', (socket) => {
 });
 
 // port number & callback function
-server.listen(4000, () => {
+server.listen(process.env.PORT || 4000, () => {
 	console.log('Server is running');
 });

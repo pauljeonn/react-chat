@@ -3,7 +3,8 @@ import io from 'socket.io-client';
 import styled from 'styled-components';
 import Chat from './Chat';
 
-const socket = io.connect('http://localhost:4000');
+// const socket = io.connect('http://localhost:4000');
+const socket = io.connect('https://pauljeonn-chat.herokuapp.com/');
 
 const Container = styled.div`
 	width: 100%;

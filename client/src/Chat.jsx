@@ -14,10 +14,14 @@ const Header = styled.div`
 	height: 100px;
 	background-color: #a046f0;
 	color: #fff566;
-	font-size: 30px;
+	font-size: 26px;
 	font-weight: 500;
 	border-top-left-radius: 10px;
 	border-top-right-radius: 10px;
+	padding-left: 20px;
+	box-sizing: border-box;
+	display: flex;
+	align-items: center;
 `;
 
 const Body = styled.div`
@@ -27,7 +31,6 @@ const Body = styled.div`
 	box-sizing: border-box;
 	overflow: auto;
 	flex-grow: 1;
-	/* background-color: #fff566; ; */
 `;
 
 const Footer = styled.div`
@@ -41,7 +44,7 @@ const Footer = styled.div`
 	justify-content: center;
 `;
 
-const Input = styled.input`
+const Input = styled.textarea`
 	width: 280px;
 	height: 70px;
 	border: none;
@@ -62,28 +65,40 @@ const Button = styled.button`
 const Message = styled.div`
 	margin-top: 10px;
 	width: 100%;
+	padding: 5px;
+	box-sizing: border-box;
 	display: flex;
+	/* flex-direction: column; */
 	justify-content: ${(props) =>
 		props.author === props.user ? 'flex-end' : 'flex-start'};
 `;
 
 const MessageBox = styled.div`
 	width: auto;
-	max-width: 120px;
+	max-width: 180px;
 	display: flex;
+	flex-direction: column;
 	word-wrap: break-word;
 	border-radius: 5px;
 	background-color: ${(props) =>
 		props.author === props.user ? '#a046f0' : '#d7f9ff'};
 	color: ${(props) => (props.author === props.user ? 'white' : 'black')};
-	padding: 15px;
+	padding: 10px 15px;
 `;
 
-const MessageUser = styled.div``;
+const MessageUser = styled.div`
+	font-size: 11px;
+	color: gray;
+`;
 
 const MessageContent = styled.div``;
 
-const MessageTime = styled.div``;
+const MessageTime = styled.div`
+	display: flex;
+	align-items: flex-end;
+	font-size: 11px;
+	margin: 3px 5px;
+`;
 
 // socket, username, room 값을 인자로 받는다
 const Chat = ({ socket, username, room }) => {
@@ -125,6 +140,7 @@ const Chat = ({ socket, username, room }) => {
 	// messageList의 변화가 있을때, 즉 새로운 메시지가 생기면 자동으로 scroll to bottom
 	useEffect(() => {
 		messageEnd.current.scrollIntoView({ behavior: 'smooth' });
+		console.log('END!');
 	}, [messageList]);
 
 	return (
@@ -136,11 +152,18 @@ const Chat = ({ socket, username, room }) => {
 				{messageList.map((messageData) => {
 					return (
 						<Message author={messageData.author} user={username}>
+							<MessageTime>
+								{messageData.author === username && messageData.time}
+							</MessageTime>
 							<MessageBox author={messageData.author} user={username}>
-								<MessageUser>{messageData.username}</MessageUser>
+								<MessageUser>
+									{messageData.author !== username && messageData.author}
+								</MessageUser>
 								<MessageContent>{messageData.message}</MessageContent>
 							</MessageBox>
-							<MessageTime>{messageData.time}</MessageTime>
+							<MessageTime>
+								{messageData.author !== username && messageData.time}
+							</MessageTime>
 						</Message>
 					);
 				})}
