@@ -12,7 +12,7 @@ const server = http.createServer(app); // express 서버 생성
 const io = new Server(server, {
 	cors: {
 		// origin: 'http://localhost:3000',
-		origin: 'https://pauljeonn-chatty.netlify.app/',
+		origin: 'https://pauljeonn-chatty.netlify.app',
 	},
 });
 

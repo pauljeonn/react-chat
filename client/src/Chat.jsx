@@ -3,69 +3,92 @@ import styled from 'styled-components';
 import { RiSendPlane2Fill } from 'react-icons/ri';
 
 const Container = styled.div`
-	margin-top: 50px;
 	width: 400px;
+	height: 90%;
+	max-height: 800px;
+	margin-top: 50px;
 	display: flex;
 	flex-direction: column;
 `;
 
 const Header = styled.div`
 	width: 100%;
-	height: 100px;
+	height: 70px;
 	background-color: #a046f0;
-	color: #fff566;
-	font-size: 26px;
-	font-weight: 500;
+	border: 5px solid #a046f0;
 	border-top-left-radius: 10px;
 	border-top-right-radius: 10px;
-	padding-left: 20px;
+	color: white;
+	font-size: 20px;
+	font-weight: 500;
+	padding: 0 20px 10px;
 	box-sizing: border-box;
-	display: flex;
-	align-items: center;
 `;
 
 const Body = styled.div`
 	width: 100%;
-	height: 600px;
-	border: 10px solid #a046f0;
+	max-height: 600px;
+	border: 5px solid #a046f0;
+	border-bottom: none;
+	background-color: white;
 	box-sizing: border-box;
 	overflow: auto;
 	flex-grow: 1;
+	padding: 10px 0;
 `;
 
 const Footer = styled.div`
 	width: 100%;
-	height: 100px;
-	background-color: #a046f0;
+	height: 120px;
+	background-color: #e8e8e8;
+	border: 5px solid #a046f0;
+	border-top: none;
 	border-bottom-left-radius: 10px;
 	border-bottom-right-radius: 10px;
+	box-sizing: border-box;
 	display: flex;
 	align-items: center;
 	justify-content: center;
 `;
 
-const Input = styled.textarea`
+const ChatArea = styled.div`
+	width: 360px;
+	height: 90px;
+	background-color: white;
+	border-radius: 5px;
+	display: flex;
+	align-items: center;
+`;
+
+const Textarea = styled.textarea`
 	width: 280px;
 	height: 70px;
+	rows: 1;
 	border: none;
+	border-radius: 10px;
 	box-sizing: border-box;
-	border-radius: 5px;
-	margin-right: 15px;
+	padding-left: 8px;
+	margin-right: 12px;
+	font-family: 'Noto Sans KR', sans-serif;
+	outline: none;
+	resize: none;
 `;
 
 const Button = styled.button`
 	width: 60px;
 	height: 60px;
-	background-color: #fff566;
-	color: #a046f0;
+	background-color: #a046f0;
+	color: white;
 	border: none;
 	border-radius: 50%;
+	cursor: pointer;
+	background-color: ${(props) =>
+		props.currentMessage ? '#a046f0' : '#e8e8e8'};
 `;
 
 const Message = styled.div`
 	margin-top: 10px;
 	width: 100%;
-	padding: 5px;
 	box-sizing: border-box;
 	display: flex;
 	/* flex-direction: column; */
@@ -83,7 +106,8 @@ const MessageBox = styled.div`
 	background-color: ${(props) =>
 		props.author === props.user ? '#a046f0' : '#d7f9ff'};
 	color: ${(props) => (props.author === props.user ? 'white' : 'black')};
-	padding: 10px 15px;
+	padding: ${(props) =>
+		props.author === props.user ? '10px 15px' : '5px 15px 10px'};
 `;
 
 const MessageUser = styled.div`
@@ -106,8 +130,11 @@ const Chat = ({ socket, username, room }) => {
 	const [messageList, setMessageList] = useState([]);
 	// auto scroll to bottom 위해서 useRef 사용
 	const messageEnd = useRef(null);
+	const textArea = useRef();
 
-	const sendMessage = async () => {
+	const sendMessage = async (e) => {
+		e.preventDefault();
+
 		if (currentMessage) {
 			// 메시지 데이터 생성
 			const messageData = {
@@ -127,6 +154,7 @@ const Chat = ({ socket, username, room }) => {
 
 			// input text clear해주기
 			setCurrentMessage('');
+			textArea.current.focus();
 		}
 	};
 
@@ -140,7 +168,6 @@ const Chat = ({ socket, username, room }) => {
 	// messageList의 변화가 있을때, 즉 새로운 메시지가 생기면 자동으로 scroll to bottom
 	useEffect(() => {
 		messageEnd.current.scrollIntoView({ behavior: 'smooth' });
-		console.log('END!');
 	}, [messageList]);
 
 	return (
@@ -171,19 +198,23 @@ const Chat = ({ socket, username, room }) => {
 				<div ref={messageEnd}></div>
 			</Body>
 			<Footer>
-				<Input
-					type="text"
-					placeholder="메시지를 입력해주세요"
-					onChange={(e) => setCurrentMessage(e.target.value)}
-					// 엔터키 입력해도 sendMessage
-					onKeyPress={(e) => {
-						e.key === 'Enter' && sendMessage();
-					}}
-					value={currentMessage}
-				/>
-				<Button onClick={sendMessage}>
-					<RiSendPlane2Fill style={{ fontSize: '24px', color: '#a046f0' }} />
-				</Button>
+				<ChatArea>
+					<Textarea
+						ref={textArea}
+						type="text"
+						placeholder="메시지를 입력해주세요."
+						onChange={(e) => setCurrentMessage(e.target.value)}
+						// 엔터키 입력해도 sendMessage
+						onKeyPress={(e) => {
+							e.key === 'Enter' && sendMessage(e);
+						}}
+						value={currentMessage}
+					/>
+					<Button currentMessage={currentMessage} onClick={sendMessage}>
+						<RiSendPlane2Fill style={{ fontSize: '26px', color: 'white' }} />
+						{/* SEND */}
+					</Button>
+				</ChatArea>
 			</Footer>
 		</Container>
 	);
