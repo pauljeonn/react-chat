@@ -13,6 +13,11 @@ const Container = styled.div`
 	display: flex;
 	justify-content: center;
 	align-items: center;
+	@media (max-width: 480px) {
+		min-height: -webkit-fill-available;
+		height: 85vh;
+		overflow: hidden;
+	}
 `;
 
 const MainScreen = styled.div`
@@ -21,9 +26,9 @@ const MainScreen = styled.div`
 	display: flex;
 	flex-direction: column;
 	align-items: center;
+	justify-content: center;
 	@media (max-width: 480px) {
 		width: 100%;
-		height: 450px;
 	}
 `;
 

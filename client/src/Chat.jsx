@@ -10,10 +10,7 @@ const Container = styled.div`
 	display: flex;
 	flex-direction: column;
 	@media (max-width: 480px) {
-		margin-top: 0;
 		width: 100%;
-		height: 100vh;
-		max-height: 100vh;
 	}
 `;
 
@@ -54,7 +51,8 @@ const Body = styled.div`
 	flex-grow: 1;
 	padding: 10px 0;
 	@media (max-width: 480px) {
-		max-height: 100%;
+		/* height: 400px;
+		max-height: 400px; */
 	}
 `;
 
