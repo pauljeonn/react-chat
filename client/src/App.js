@@ -21,6 +21,10 @@ const MainScreen = styled.div`
 	display: flex;
 	flex-direction: column;
 	align-items: center;
+	@media (max-width: 480px) {
+		width: 100%;
+		height: 450px;
+	}
 `;
 
 const LogoImg = styled.img`
@@ -39,6 +43,9 @@ const MainWrapper = styled.div`
 	flex-direction: column;
 	align-items: center;
 	margin: 20px 0;
+	@media (max-width: 480px) {
+		width: 100%;
+	}
 `;
 
 const Input = styled.input`
@@ -65,25 +72,11 @@ const Button = styled.button`
 
 const ChatScreen = styled.div`
 	width: 100%;
-	height: 95%;
+	height: 100%;
 	display: flex;
 	flex-direction: column;
+	justify-content: center;
 	align-items: center;
-`;
-
-const Back = styled.button`
-	margin-top: 50px;
-	width: 120px;
-	height: 50px;
-	/* background-color: #fff566; */
-	background-color: white;
-	border: 3px solid #a046f0;
-	border-radius: 10px;
-	color: #a046f0;
-	font-size: 16px;
-	font-weight: 600;
-	text-align: center;
-	cursor: pointer;
 `;
 
 function App() {
@@ -98,7 +91,7 @@ function App() {
 		}
 	};
 
-	const back = () => {
+	const leaveRoom = () => {
 		setUsername('');
 		setRoom('');
 		setEntered(false);
@@ -109,8 +102,12 @@ function App() {
 			<Container>
 				{entered ? (
 					<ChatScreen>
-						<Chat socket={socket} username={username} room={room} />
-						<Back onClick={back}>나가기</Back>
+						<Chat
+							socket={socket}
+							username={username}
+							room={room}
+							leave={leaveRoom}
+						/>
 					</ChatScreen>
 				) : (
 					<MainScreen>

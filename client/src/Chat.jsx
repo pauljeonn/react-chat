@@ -1,14 +1,20 @@
 import React, { useEffect, useState, useRef } from 'react';
 import styled from 'styled-components';
 import { RiSendPlane2Fill } from 'react-icons/ri';
+import { IoExitOutline } from 'react-icons/io5';
 
 const Container = styled.div`
 	width: 400px;
 	height: 90%;
 	max-height: 800px;
-	margin-top: 50px;
 	display: flex;
 	flex-direction: column;
+	@media (max-width: 480px) {
+		margin-top: 0;
+		width: 100%;
+		height: 100vh;
+		max-height: 100vh;
+	}
 `;
 
 const Header = styled.div`
@@ -19,10 +25,22 @@ const Header = styled.div`
 	border-top-left-radius: 10px;
 	border-top-right-radius: 10px;
 	color: white;
-	font-size: 20px;
-	font-weight: 500;
-	padding: 0 20px 10px;
+	padding: 10px 15px 0;
 	box-sizing: border-box;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+`;
+
+const RoomTitle = styled.div`
+	font-size: 18px;
+	font-weight: 500;
+	margin-bottom: 5px;
+`;
+
+const LeaveButton = styled.div`
+	font-size: 24px;
+	cursor: pointer;
 `;
 
 const Body = styled.div`
@@ -35,6 +53,9 @@ const Body = styled.div`
 	overflow: auto;
 	flex-grow: 1;
 	padding: 10px 0;
+	@media (max-width: 480px) {
+		max-height: 100%;
+	}
 `;
 
 const Footer = styled.div`
@@ -58,6 +79,9 @@ const ChatArea = styled.div`
 	border-radius: 5px;
 	display: flex;
 	align-items: center;
+	@media (max-width: 480px) {
+		width: 90%;
+	}
 `;
 
 const Textarea = styled.textarea`
@@ -72,6 +96,9 @@ const Textarea = styled.textarea`
 	font-family: 'Noto Sans KR', sans-serif;
 	outline: none;
 	resize: none;
+	@media (max-width: 480px) {
+		width: 75%;
+	}
 `;
 
 const Button = styled.button`
@@ -125,7 +152,7 @@ const MessageTime = styled.div`
 `;
 
 // socket, username, room 값을 인자로 받는다
-const Chat = ({ socket, username, room }) => {
+const Chat = ({ socket, username, room, leave }) => {
 	const [currentMessage, setCurrentMessage] = useState('');
 	const [messageList, setMessageList] = useState([]);
 	// auto scroll to bottom 위해서 useRef 사용
@@ -173,7 +200,10 @@ const Chat = ({ socket, username, room }) => {
 	return (
 		<Container>
 			<Header>
-				<p>{room}</p>
+				<RoomTitle>{room}</RoomTitle>
+				<LeaveButton onClick={() => leave()}>
+					<IoExitOutline />
+				</LeaveButton>
 			</Header>
 			<Body>
 				{messageList.map((messageData) => {
