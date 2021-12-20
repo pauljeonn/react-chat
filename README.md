@@ -12,6 +12,6 @@
 
 ## Tech Stack
 
-- Frontend: React, styled-components
+- Frontend: React, styled-components, Socket.io (Client)
 - Backend: Node.js, Express, Socket.io
 - Deployment: Heroku(Server), Netlify(Client)
